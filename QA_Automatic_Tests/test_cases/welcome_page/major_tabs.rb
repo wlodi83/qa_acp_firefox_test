@@ -10,10 +10,8 @@ describe ACP do
        @dbh = DBI.connect("DBI:Mysql:ids_db_production:10.2.10.1:3306",
                       "lwlodarczyk", "gaBeicah0phaibo")
        # get server version string and display it
-       row = @dbh.select_one("select * from cms_db_production.acp_users where email = 'lukasz.wlodarczyk@yahoo.com';")
-       row.each do |r|
-         puts r
-       end
+       row = @dbh.select_one("select * from cms_db_production.programs as pr join cms_db_production.advertisers as adv on pr.advertiser_id = adv.id join cms_db_production.companies as comp on adv.company_id = comp.id where comp.id = '13913' and pr.deleted_at IS NULL;;")
+       puts row
 
     rescue DBI::DatabaseError => e
       puts "An error occurred"
