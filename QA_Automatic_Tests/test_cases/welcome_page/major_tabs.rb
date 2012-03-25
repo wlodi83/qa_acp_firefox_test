@@ -1,27 +1,9 @@
 # encoding: UTF-8
 require './ACP/acp.rb'
-require 'dbi'
 
 describe ACP do
   before (:all) do
-   #connect with database
-     begin
-       # connect to the MySQL server
-       @dbh = DBI.connect("DBI:Mysql:ids_db_production:10.2.10.1:3306",
-                      "******", "******")
-       # get server version string and display it
-       row = @dbh.select_one("select * from cms_db_production.programs as pr join cms_db_production.advertisers as adv on pr.advertiser_id = adv.id join cms_db_production.companies as comp on adv.company_id = comp.id where comp.id = '13913' and pr.deleted_at IS NULL;;")
-       puts row
-
-    rescue DBI::DatabaseError => e
-      puts "An error occurred"
-      puts "Error code:    #{e.err}"
-      puts "Error message: #{e.errstr}"
-    ensure
-      # disconnect from server
-      @dbh.disconnect if @dbh
-    end
-
+  #connect with Staging database
   end
 
   it "registered user should go to login page and after login see right content" do
@@ -41,7 +23,24 @@ describe ACP do
    #find user name link
    acp.find_user_name_link.should eq("http://staging.acp.sponsorpay.com/13913/password/edit")
    #find active campaigns link
+   #TODO check in database
    acp.find_active_campaigns.should eq("http://staging.acp.sponsorpay.com/13913/campaigns")
+   #find current balance
+   #TODO check in database
+   acp.find_current_balance.should eq("http://staging.acp.sponsorpay.com/13913/billing/balance")
+   #find log out link
+   acp.find_log_out.should eq("http://staging.acp.sponsorpay.com/users/sign_out")
+   #find Camapigns link
+   acp.find_campaigns_link.should eq("http://staging.acp.sponsorpay.com/13913/campaigns")
+   #find Reporting link
+   acp.find_reporting_link.should eq("http://staging.acp.sponsorpay.com/13913/reporting")
+   #find Billing link
+   acp.find_billing_link.should eq("http://staging.acp.sponsorpay.com/13913/billing/balance")
+   #find Account link
+   acp.find_account_link.should eq("http://staging.acp.sponsorpay.com/13913/password/edit")
+   #find Support link
+   acp.find_support_link.should eq("http://staging.acp.sponsorpay.com/13913/support/faq")
+   #close browser session
    acp.quit
   end
 end
