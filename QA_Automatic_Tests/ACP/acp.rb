@@ -160,7 +160,7 @@ class ACP
     @element = @driver.find_element(:name, 'user[email]')
     @element.send_keys "lukasz.wlodarczyk@yahoo.com"
     @element = @driver.find_element(:name, 'user[password]')
-    @element.send_keys "********"
+    @element.send_keys "deftones"
   end
 
   def fill_fields_with_fake_credentials
@@ -175,7 +175,7 @@ class ACP
     @element = @driver.find_element(:name, 'user[email]')
     @element.send_keys "felix.speiser@sponsorpay.com"
     @element = @driver.find_element(:name, 'user[password]')
-    @element.send_keys "********"
+    @element.send_keys "dermade"
   end
 
   def find_name_header
@@ -199,7 +199,7 @@ class ACP
   end
 
   def find_installs_today_header
-    @element = @driver.find_element(:link_text, "Installs Today")
+    @element = @driver.find_element(:xpath, "//table[@class='stats']//thead//tr//th[6]")
     @element.text
   end
  
