@@ -53,7 +53,7 @@ class Staging
       @result_array.push(row)
     end
     @sth.finish
-    return @result_array
+    return @result_array.flatten
   end
 
 end

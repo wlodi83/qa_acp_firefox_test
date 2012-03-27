@@ -1,9 +1,14 @@
 # encoding: UTF-8
 require './ACP/acp.rb'
+require './database/staging.rb'
 
 describe ACP do
   before (:all) do
   #connect with Staging database
+  @connection = Staging.new("lwlodarczyk", "gaBeicah0phaibo")
+  @connection.connect
+  @connection.do_query("select count(*) from cms_db_production.programs as pr join cms_db_production.advertisers as adv on pr.advertiser_id = adv.id join cms_db_production.companies as comp on adv.company_id = comp.id where comp.id = '13913' and pr.deleted_at IS NULL;")
+  @number_of_active_campaigns = @connection.print_result_array
   end
 
   it "registered user should go to login page and after login see right content" do
@@ -23,8 +28,9 @@ describe ACP do
    #find user name link
    acp.find_user_name_link.should eq("http://staging.acp.sponsorpay.com/13913/password/edit")
    #find active campaigns link
-   #TODO check in database
    acp.find_active_campaigns.should eq("http://staging.acp.sponsorpay.com/13913/campaigns")
+   #find amount of active campaigns
+   acp.find_amount_of_active_campaigns.should eq (@number_of_active_campaigns)
    #find current balance
    #TODO check in database
    acp.find_current_balance.should eq("http://staging.acp.sponsorpay.com/13913/billing/balance")
@@ -42,5 +48,9 @@ describe ACP do
    acp.find_support_link.should eq("http://staging.acp.sponsorpay.com/13913/support/faq")
    #close browser session
    acp.quit
+  end
+
+  after (:all) do
+    @connection.disconnect
   end
 end

@@ -11,19 +11,18 @@ describe ACP do
   @connection = Staging.new("lwlodarczyk", "gaBeicah0phaibo")
   @connection.connect
   @connection.do_query("select pr.name from cms_db_production.programs as pr join cms_db_production.advertisers as adv on pr.advertiser_id = adv.id join cms_db_production.companies as comp on adv.company_id = comp.id where comp.id = 13892 and pr.deleted_at IS NULL;")
-  table = @connection.print_result_array
-  @campaigns_table = table
-   puts "#####################"
-  puts @campaigns_table
-  @campaigns_table_asc = ["53w5", "asdasdasd", "Blubberbla Test", "test", "Test", "test", "test", 
-                          "Testing the Routing Feature", "Tilt Mazes Testing escaping"] 
-  @campaigns_table_desc = ["Tilt Mazes Testing escaping", "Testing the Routing Feature", "test", "Test", "test", "test",
-                          "Blubberbla Test", "asdasdasd", "53w5"]
-  @cpi_table = ["USD 1.00", "USD 0.50", "USD 0.50", "USD 0.50", "USD 0.50", "USD 0.65", "USD 0.50", "USD 0.50", "USD 0.50"]
-  @cpi_table_asc = ["USD 0.50", "USD 0.50", "USD 0.50", "USD 0.50", "USD 0.50", "USD 0.50", "USD 0.50", 
-                   "USD 0.65" , "USD 1.00"]
-  @cpi_table_desc = ["USD 1.00", "USD 0.65", "USD 0.50", "USD 0.50", "USD 0.50", "USD 0.50", "USD 0.50", 
-                   "USD 0.50", "USD 0.50"] 
+  @campaigns_table = @connection.print_result_array
+  @connection.do_query("select pr.name from cms_db_production.programs as pr join cms_db_production.advertisers as adv on pr.advertiser_id = adv.id join cms_db_production.companies as comp on adv.company_id = comp.id where comp.id = 13892 and pr.deleted_at IS NULL order by pr.name ASC;")
+  @campaigns_table_asc = @connection.print_result_array
+  @connection.do_query("select pr.name from cms_db_production.programs as pr join cms_db_production.advertisers as adv on pr.advertiser_id = adv.id join cms_db_production.companies as comp on adv.company_id = comp.id where comp.id = 13892 and pr.deleted_at IS NULL order by pr.name DESC;")
+  @campaigns_table_desc = @connection.print_result_array
+  @connection.do_query("select pr.name from cms_db_production.programs as pr join cms_db_production.advertisers as adv on pr.advertiser_id = adv.id join cms_db_production.companies as comp on adv.company_id = comp.id where comp.id = 13892 and pr.deleted_at IS NULL;")
+  @connection.do_query("select concat('USD ', round(prov.value, 2)) from cms_db_production.provisions as prov join cms_db_production.landing_pages as lp on prov.landing_page_id = lp.id join cms_db_production.program_regions as prr on lp.program_region_id = prr.id join cms_db_production.programs as pr on prr.program_id = pr.id join cms_db_production.advertisers as adv on pr.advertiser_id = adv.id join cms_db_production.companies as comp on adv.company_id = comp.id where comp.id = 13892 and pr.deleted_at IS NULL;")
+  @cpi_table = @connection.print_result_array
+  @connection.do_query("select concat('USD ', round(prov.value, 2)) from cms_db_production.provisions as prov join cms_db_production.landing_pages as lp on prov.landing_page_id = lp.id join cms_db_production.program_regions as prr on lp.program_region_id = prr.id join cms_db_production.programs as pr on prr.program_id = pr.id join cms_db_production.advertisers as adv on pr.advertiser_id = adv.id join cms_db_production.companies as comp on adv.company_id = comp.id where comp.id = 13892 and pr.deleted_at IS NULL order by prov.value ASC;")
+  @cpi_table_asc = @connection.print_result_array
+  @connection.do_query("select concat('USD ', round(prov.value, 2)) from cms_db_production.provisions as prov join cms_db_production.landing_pages as lp on prov.landing_page_id = lp.id join cms_db_production.program_regions as prr on lp.program_region_id = prr.id join cms_db_production.programs as pr on prr.program_id = pr.id join cms_db_production.advertisers as adv on pr.advertiser_id = adv.id join cms_db_production.companies as comp on adv.company_id = comp.id where comp.id = 13892 and pr.deleted_at IS NULL order by prov.value DESC;")
+  @cpi_table_desc = @connection.print_result_array 
   end
 
   it "should redirect user to Campaigns page with campaigns and displays correct conent on Campaigns page" do
@@ -110,6 +109,10 @@ describe ACP do
     acp.find_cpi_values_in_descending_order.should eq(@cpi_table_desc)
     #close browser
     acp.quit
+  end
+
+  after do
+   @connection.disconnect   
   end
 
 end

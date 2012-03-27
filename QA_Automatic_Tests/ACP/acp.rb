@@ -62,8 +62,13 @@ class ACP
   end
 
   def find_active_campaigns
-    @element = @driver.find_element(:link_text => "Active campaigns: 0")
+    @element = @driver.find_element(:css, "li#campaign_count a")
     @element.attribute("href")
+  end
+
+  def find_amount_of_active_campaigns
+    @element = @driver.find_element(:css, "li#campaign_count")
+    @element.text.match(/\d/).to_s.split
   end
 
   def find_current_balance
