@@ -8,7 +8,7 @@ describe ACP do
   @explanation_hint_1 = "Number of downloads your campaign has generated today and number of downloads you have defined as daily cap." 
   @explanation_hint_2 = "Active means that your campaign is running. Pending means that your campaign is not running and requires action from your side. Click on campaign to find out what is missing."
   #connect with the database
-  @connection = Staging.new("lwlodarczyk", "gaBeicah0phaibo")
+  @connection = Staging.new("", "")
   @connection.connect
   @connection.do_query("select pr.name from cms_db_production.programs as pr join cms_db_production.advertisers as adv on pr.advertiser_id = adv.id join cms_db_production.companies as comp on adv.company_id = comp.id where comp.id = 13892 and pr.deleted_at IS NULL;")
   @campaigns_table = @connection.print_result_array
